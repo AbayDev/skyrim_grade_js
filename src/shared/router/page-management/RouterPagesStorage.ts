@@ -3,11 +3,11 @@ import { RouterError } from "../errors/RouterError";
 import type { PageInfo } from "../types/PageInfo";
 import type { CreateRoute } from "../types/CreateRoute";
 
-export class RouterPagesStorage implements RouterPagesStorageInterface {
-  private pages: PageInfo[] = [];
-  private pagesMap = new Map<string, PageInfo>();
+export class RouterPagesStorage<RouterContextType> implements RouterPagesStorageInterface<RouterContextType> {
+  private pages: PageInfo<RouterContextType>[] = [];
+  private pagesMap = new Map<string, PageInfo<RouterContextType>>();
 
-  private validatePagePath(page: PageInfo) {
+  private validatePagePath(page: PageInfo<RouterContextType>) {
     if (!page.path) {
       throw new RouterError(`The page ${page.key} path required`);
     }
@@ -23,7 +23,7 @@ export class RouterPagesStorage implements RouterPagesStorageInterface {
    * Добавить страницу в картку страниц по ииерархии
    * @param page
    */
-  private addPageToMap(page: CreateRoute) {
+  private addPageToMap(page: CreateRoute<RouterContextType>) {
     this.pagesMap.set(page.key, page);
     if (page.children) {
       page.children.forEach((page) => {
@@ -35,11 +35,11 @@ export class RouterPagesStorage implements RouterPagesStorageInterface {
   /**
    * Подготовить данные о странице при создании
    */
-  private addParentKeyToPages(page: CreateRoute): PageInfo {
-    const result: PageInfo = { ...page };
+  private addParentKeyToPages<RouterContextType>(page: CreateRoute<RouterContextType>): PageInfo<RouterContextType> {
+    const result: PageInfo<RouterContextType> = { ...page };
 
     result.children = page.children?.map((child) => {
-      const childCopy: PageInfo = { ...child };
+      const childCopy: PageInfo<RouterContextType> = { ...child };
       childCopy.parentKey = page.key;
       return this.addParentKeyToPages(childCopy);
     });
@@ -50,7 +50,7 @@ export class RouterPagesStorage implements RouterPagesStorageInterface {
   /**
    * Добавить страницы
    */
-  public add(...pages: CreateRoute[]) {
+  public add(...pages: CreateRoute<RouterContextType>[]) {
     pages.forEach((page) => {
       this.validatePagePath(page);
       const newPage = this.addParentKeyToPages(page);
@@ -59,7 +59,7 @@ export class RouterPagesStorage implements RouterPagesStorageInterface {
     });
   }
 
-  public removeByHierarchy(key: string, pages: PageInfo[]) {
+  public removeByHierarchy(key: string, pages: PageInfo<RouterContextType>[]) {
     for (let i = 0; i < pages.length; i++) {
       const page = pages[i];
 
@@ -101,7 +101,7 @@ export class RouterPagesStorage implements RouterPagesStorageInterface {
   /**
    * Найти страницы по объекту RouteLocation
    */
-  public findWithAncestors(key: string): PageInfo[] | null {
+  public findWithAncestors(key: string): PageInfo<RouterContextType>[] | null {
     const page = this.pagesMap.get(key);
 
     if (!page) {

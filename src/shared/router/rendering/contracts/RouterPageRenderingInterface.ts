@@ -1,7 +1,7 @@
 import type { PageInfo } from "../../types/PageInfo";
 import type { PageProps } from "../../types/PageInterface";
 
-export interface RouterPageRenderingInterface {
+export interface RouterPageRenderingInterface<RouterContextType> {
   /**
    * Рендеринг страниц
    * 
@@ -10,5 +10,5 @@ export interface RouterPageRenderingInterface {
    * @param pages - страница для редеринга от родителя до ребенка слева направо
    * @param pageProps - глобальные свойства страницы
    */
-  renderPages(pages: PageInfo[], pageProps: PageProps): void;
+  renderPages(pages: PageInfo<RouterContextType>[], pageProps: PageProps<RouterContextType>): void;
 }

@@ -4,12 +4,12 @@ import type { PageInfo } from "../../types/PageInfo";
 /**
  * Хранилище страниц роута
  */
-export interface RouterPagesStorageInterface {
+export interface RouterPagesStorageInterface<RouterContextType> {
   /**
    * Добавить страницу(ы)
    * @param pages - страницы
    */
-  add(...pages: CreateRoute[]): void;
+  add(...pages: CreateRoute<RouterContextType>[]): void;
   /**
    * Ужалить страницу по уникальному ключу
    * @param key - уникальный ключ
@@ -18,11 +18,11 @@ export interface RouterPagesStorageInterface {
   /**
    * Получить все страницы
    */
-  getPages(): PageInfo[];
+  getPages(): PageInfo<RouterContextType>[];
 
   /**
    * Найти страницу включая родителей
    * @param key - уникальный ключ страницы
    */
-  findWithAncestors(key: string): PageInfo[] | null;
+  findWithAncestors(key: string): PageInfo<RouterContextType>[] | null;
 }

@@ -9,25 +9,21 @@ import type { RouteQuery } from "../types/RouteQuery";
 import type { Route } from "../types/Route";
 import type { RouteLocation } from "../types/RouteLocation";
 import type { RouterInterface } from "./contracts/RouterInterface";
+import type { RouterContext } from "../types/RouterContext";
 
-export class Router implements RouterInterface {
+export class Router<RouterContextType>
+  implements RouterInterface<RouterContextType>
+{
   private currentRoute?: Route;
-  private currentPages: CurrentPagesInterface;
-  private pagePathAnalyzer: PagePathAnalyzerInterface;
-  private pagesStorage: RouterPagesStorageInterface;
-  private pageRendering: RouterPageRenderingInterface;
+  private routerContext?: RouterContext;
 
   constructor(
-    currentPages: CurrentPagesInterface,
-    pagePathAnalyzer: PagePathAnalyzerInterface,
-    pagesStorage: RouterPagesStorageInterface,
-    pageRendering: RouterPageRenderingInterface
-  ) {
-    this.currentPages = currentPages;
-    this.pagePathAnalyzer = pagePathAnalyzer;
-    this.pagesStorage = pagesStorage;
-    this.pageRendering = pageRendering;
-  }
+    // @ts-ignore
+    private readonly currentPages: CurrentPagesInterface,
+    private readonly pagePathAnalyzer: PagePathAnalyzerInterface<RouterContextType>,
+    private readonly pagesStorage: RouterPagesStorageInterface<RouterContextType>,
+    private readonly pageRendering: RouterPageRenderingInterface<RouterContextType>
+  ) {}
 
   public getCurrentRoute() {
     return this.currentRoute!;
@@ -35,7 +31,7 @@ export class Router implements RouterInterface {
 
   async back(): Promise<void> {}
 
-  public addPage(...pages: PageInfo[]) {
+  public addPage(...pages: PageInfo<RouterContextType>[]) {
     this.pagesStorage.add(...pages);
   }
 
@@ -44,14 +40,14 @@ export class Router implements RouterInterface {
   }
 
   private generateCurrentRoute(
-    pages: PageInfo[],
+    pages: PageInfo<RouterContextType>[],
     params?: RouteParams,
     query?: RouteQuery
   ): Route {
     return {
       params: params || {},
       query: query || {},
-      name: (pages.at(-1) as PageInfo)?.key,
+      name: (pages.at(-1) as PageInfo<RouterContextType>)?.key,
       path: this.pagePathAnalyzer.generatePathByPages(pages, params, query),
     };
   }
@@ -97,6 +93,7 @@ export class Router implements RouterInterface {
     );
     this.pageRendering.renderPages(pages, {
       router: this,
+      ...this.routerContext,
     });
   }
 
@@ -106,5 +103,9 @@ export class Router implements RouterInterface {
     } else if (typeof to === "object" && to !== null) {
       this.navigateByRouteLocation(to);
     }
+  }
+
+  public initRouterContext(context: RouterContext): void {
+    this.routerContext = context;
   }
 }

@@ -3,7 +3,7 @@ import type { RouteParams } from "../types/RouteParams";
 import type { RouteQuery } from "../types/RouteQuery";
 import type { PagePathAnalyzerInterface } from "./contracts/PagePathAnalyzerInterface";
 
-export class PagePathAnalyzer implements PagePathAnalyzerInterface {
+export class PagePathAnalyzer<RouterContextType> implements PagePathAnalyzerInterface<RouterContextType> {
   /**
    * Поделить путь на сегменты
    * @param path - путь
@@ -31,7 +31,7 @@ export class PagePathAnalyzer implements PagePathAnalyzerInterface {
    * @param query - query параметры
    */
   public generatePathByPages(
-    pages: PageInfo[],
+    pages: PageInfo<RouterContextType>[],
     params?: RouteParams,
     query?: RouteQuery
   ): string {
@@ -70,13 +70,13 @@ export class PagePathAnalyzer implements PagePathAnalyzerInterface {
    */
   public findPagesByPath(
     path: string,
-    pages: PageInfo[]
+    pages: PageInfo<RouterContextType>[]
   ): {
-    pages: PageInfo[];
+    pages: PageInfo<RouterContextType>[];
     params: RouteParams;
     pathSegments: string[];
   } {
-    let foundPages: PageInfo[] = [];
+    let foundPages: PageInfo<RouterContextType>[] = [];
     let params: RouteParams = {};
     let pathSegments = this.pathToSegments(path);
 

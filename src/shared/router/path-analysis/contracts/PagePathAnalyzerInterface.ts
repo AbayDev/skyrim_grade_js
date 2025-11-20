@@ -5,7 +5,7 @@ import type { RouteQuery } from "../../types/RouteQuery";
 /**
  * Анализатор путей страниц
  */
-export interface PagePathAnalyzerInterface {
+export interface PagePathAnalyzerInterface<RouterContextType> {
   /**
    * Поделить путь на отдельные сегменты по "/" символу.
    * @param path - путь
@@ -26,7 +26,7 @@ export interface PagePathAnalyzerInterface {
    * @param query query параметры
    */
   generatePathByPages(
-    pages: PageInfo[],
+    pages: PageInfo<RouterContextType>[],
     params?: RouteParams,
     query?: RouteQuery
   ): string;
@@ -46,12 +46,12 @@ export interface PagePathAnalyzerInterface {
    */
   findPagesByPath(
     path: string,
-    pages: PageInfo[]
+    pages: PageInfo<RouterContextType>[]
   ): {
     /**
      * Совподающие страницы
      */
-    pages: PageInfo[];
+    pages: PageInfo<RouterContextType>[];
     /**
      * Найденные динамические параметры
      */

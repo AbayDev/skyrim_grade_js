@@ -1,4 +1,5 @@
 import type { RouterInterface } from "../core/contracts/RouterInterface";
+import type { RouterContext } from "./RouterContext";
 
 export interface PageInterface {
   key: string;
@@ -6,8 +7,8 @@ export interface PageInterface {
   mounted?(): void;
   unmount?(): void;
 }
-export type PageProps = {
-  router?: RouterInterface
-}
+export type PageProps<RouterContextType> = {
+  router: RouterInterface<RouterContextType>
+} & RouterContext
 
-export type PageClass = new (props: PageProps) => PageInterface;
+export type PageClass<RouterContextType> = new (props: PageProps<RouterContextType>) => PageInterface;

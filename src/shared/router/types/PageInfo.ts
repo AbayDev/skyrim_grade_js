@@ -1,6 +1,6 @@
 import type { CreateRoute } from "./CreateRoute";
 
-export type PageInfo = Omit<CreateRoute, 'children'> & {
+export type PageInfo<RouterContextType> = Omit<CreateRoute<RouterContextType>, 'children'> & {
   parentKey?: string;
-  children?: PageInfo[]
+  children?: PageInfo<RouterContextType>[]
 };

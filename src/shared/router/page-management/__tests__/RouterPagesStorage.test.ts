@@ -11,7 +11,7 @@ class URLPatternTest {
 }
 
 describe("RouterPagesStorage", () => {
-  let pagesStorage: RouterPagesStorage;
+  let pagesStorage: RouterPagesStorage<Record<string, unknown>>;
 
   beforeEach(() => {
     pagesStorage = new RouterPagesStorage();
@@ -21,11 +21,11 @@ describe("RouterPagesStorage", () => {
   const createMockPage = (
     key: string,
     path?: URLPattern,
-    children?: CreateRoute[]
-  ): CreateRoute => ({
+    children?: CreateRoute<Record<string, unknown>>[]
+  ): CreateRoute<Record<string, unknown>> => ({
     key,
     path: path || (new URLPatternTest({ pathname: `/${key}` }) as URLPattern),
-    page: vi.fn() as unknown as PageClass,
+    page: vi.fn() as unknown as PageClass<Record<string, unknown>>,
     children,
   });
 
@@ -84,9 +84,9 @@ describe("RouterPagesStorage", () => {
     test("должен валидировать наличие path", () => {
       const pageWithoutPath = {
         key: "invalid",
-        page: vi.fn() as unknown as PageClass,
+        page: vi.fn() as unknown as PageClass<Record<string, unknown>>,
         // Нет path!
-      } as CreateRoute;
+      } as CreateRoute<Record<string, unknown>>;
 
       expect(() => {
         pagesStorage.add(pageWithoutPath);
@@ -99,9 +99,9 @@ describe("RouterPagesStorage", () => {
     test("должен валидировать path в дочерних страницах", () => {
       const invalidChildPage = {
         key: "invalid-child",
-        page: vi.fn() as unknown as PageClass,
+        page: vi.fn() as unknown as PageClass<Record<string, unknown>>,
         // Нет path!
-      } as CreateRoute;
+      } as CreateRoute<Record<string, unknown>>;
 
       const parentPage = createMockPage("parent", undefined, [
         invalidChildPage,
