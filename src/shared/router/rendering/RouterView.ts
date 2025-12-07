@@ -6,7 +6,7 @@ export class RouterView extends HTMLElement {
 
   constructor() {
     super();
-    this.style.display = "none";
+    this.style.display = 'contents'
   }
 
   /**
