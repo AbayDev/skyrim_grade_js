@@ -1,6 +1,10 @@
-import { buildRouterDefault } from "../shared/router";
+import { buildRouterDefault } from "../../shared/router/buildRouterDefault";
 
-export class App {
+interface AppInterface<Config extends Record<string, unknown>> {
+  init(config: Config): void;
+}
+
+export class App implements AppInterface<AppConfig> {
   constructor(private readonly rootElement: HTMLElement) {}
 
   public init(config: AppConfig) {
