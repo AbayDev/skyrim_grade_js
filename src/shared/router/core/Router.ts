@@ -33,10 +33,17 @@ export class Router<RouterContextType>
 
   public addPage(...pages: PageInfo<RouterContextType>[]) {
     this.pagesStorage.add(...pages);
+    return this;
   }
 
   public removePage(key: string) {
     this.pagesStorage.remove(key);
+    return this;
+  }
+
+  public startRender() {
+    this.navigate(location.href);
+    return this;
   }
 
   private generateCurrentRoute(
@@ -53,20 +60,22 @@ export class Router<RouterContextType>
   }
 
   private navigateByStringPath(path: string) {
-    let correctPath = path;
+    // Извлекаем чистый путь из полного URL если передан
+    const extractedPath = this.pagePathAnalyzer.extractOriginFromUrl(path);
+    let correctPath = extractedPath;
 
-    if (path.endsWith("/")) {
-      correctPath = path.slice(0, path.length - 1);
+    if (correctPath.endsWith("/")) {
+      correctPath = correctPath.slice(0, correctPath.length - 1);
     }
 
-    const query = this.pagePathAnalyzer.getPathQueryParams(path);
+    const query = this.pagePathAnalyzer.getPathQueryParams(correctPath);
     const founded = this.pagePathAnalyzer.findPagesByPath(
       correctPath,
       this.pagesStorage.getPages()
     );
 
     if (!founded.pages.length) {
-      throw new RouterError(`Page by path ${path} not found`);
+      throw new RouterError(`Page by path ${correctPath} not found`);
     }
 
     this.currentRoute = this.generateCurrentRoute(
@@ -105,7 +114,8 @@ export class Router<RouterContextType>
     }
   }
 
-  public initRouterContext(context: RouterContext): void {
+  public initRouterContext(context: RouterContext) {
     this.routerContext = context;
+    return this;
   }
 }

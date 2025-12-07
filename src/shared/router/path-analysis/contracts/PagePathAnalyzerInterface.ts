@@ -33,14 +33,14 @@ export interface PagePathAnalyzerInterface<RouterContextType> {
 
   /**
    * Найти страницы пути которых совподают с основным путем.
-   * 
+   *
    * @description
    * Функция найдет не только совподающие страница,
    * но и динамические параметры из пути в виде объекта,
    * для удобного чтения.
    * Также возвращает `pathToSegments`, в виде массива строк, которые считаются не потребленными.
    * То есть не найдено для них еще совпадения.
-   * 
+   *
    * @param path - основной путь
    * @param pages - список страниц для сопоставления
    */
@@ -61,4 +61,18 @@ export interface PagePathAnalyzerInterface<RouterContextType> {
      */
     pathSegments: string[];
   };
+
+  /**
+   * Извлечь из `pageOrUrl` путь к странице.
+   * 
+   * @description
+   * Проверка на внутреннюю ссылку, если внутреняя корректирует ее.
+   * 
+   * Например если передать `http://localhost:5173/tasks?search=task 1`, то вернет `/tasks?search=task 1`.
+   * 
+   * По сути вырезает origin оставляя `путь к странице` + `поисковые параметры` + `хеш`
+   *
+   * @param pageOrUrl - полный url или путь к странице
+   */
+  extractOriginFromUrl(pageOrUrl: string): string;
 }

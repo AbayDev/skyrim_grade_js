@@ -8,13 +8,13 @@ export interface RouterInterface<RouterContextType> {
    * добавить страницу(ы)
    * @param pages - страницы
    */
-  addPage(...pages: CreateRoute<RouterContextType>[]): void;
+  addPage(...pages: CreateRoute<RouterContextType>[]): this;
 
   /**
    * Удалить страницу по уникальному ключу
    * @param key уникальный ключ
    */
-  removePage(key: string): void;
+  removePage(key: string): this;
 
   /**
    * Перейти к странице
@@ -37,5 +37,10 @@ export interface RouterInterface<RouterContextType> {
    * Инициализация контекста куда можно передать глобальные свойства для страниц
    * @param context - объект который будет передаваться страницам
    */
-  initRouterContext(context: RouterContext<RouterContextType>): void;
+  initRouterContext(context: RouterContext<RouterContextType>): this;
+
+  /**
+   * Начало рендеринга страниц
+   */
+  startRender(): this;
 }

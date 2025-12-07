@@ -5,7 +5,9 @@ import { RouterError } from "../errors/RouterError";
 import type { RouterView } from "./RouterView";
 import type { PageInfo } from "../types/PageInfo";
 
-export class RouterPageRendering<RouterContextType> implements RouterPageRenderingInterface<RouterContextType> {
+export class RouterPageRendering<RouterContextType>
+  implements RouterPageRenderingInterface<RouterContextType>
+{
   constructor(
     private readonly rootElement: HTMLElement,
     private readonly currentPages: CurrentPagesInterface
@@ -18,7 +20,10 @@ export class RouterPageRendering<RouterContextType> implements RouterPageRenderi
    * @param page - страница
    * @param element - элемент где будет рендерится
    */
-  private async renderPage(page: PageInfo<RouterContextType>, pageProps: PageProps<RouterContextType>) {
+  private async renderPage(
+    page: PageInfo<RouterContextType>,
+    pageProps: PageProps<RouterContextType>
+  ) {
     const routerView = this.rootElement.getElementsByTagName(
       "router-view"
     ) as HTMLCollectionOf<RouterView>;
@@ -58,7 +63,10 @@ export class RouterPageRendering<RouterContextType> implements RouterPageRenderi
     pageInstance.mounted?.();
   }
 
-  public async renderPages(pages: PageInfo<RouterContextType>[], pageProps: PageProps<RouterContextType>) {
+  public async renderPages(
+    pages: PageInfo<RouterContextType>[],
+    pageProps: PageProps<RouterContextType>
+  ) {
     if (!pages?.length) {
       throw new RouterError("Page not found");
     }

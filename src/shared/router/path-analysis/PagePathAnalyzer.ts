@@ -3,7 +3,9 @@ import type { RouteParams } from "../types/RouteParams";
 import type { RouteQuery } from "../types/RouteQuery";
 import type { PagePathAnalyzerInterface } from "./contracts/PagePathAnalyzerInterface";
 
-export class PagePathAnalyzer<RouterContextType> implements PagePathAnalyzerInterface<RouterContextType> {
+export class PagePathAnalyzer<RouterContextType>
+  implements PagePathAnalyzerInterface<RouterContextType>
+{
   /**
    * Поделить путь на сегменты
    * @param path - путь
@@ -99,9 +101,7 @@ export class PagePathAnalyzer<RouterContextType> implements PagePathAnalyzerInte
         // Вычисляем сколько сегментов пути было "потреблено" этим паттерном
         let consumedLength = 0;
 
-        const pagePathSegments = this.pathToSegments(
-          page.path.pathname
-        );
+        const pagePathSegments = this.pathToSegments(page.path.pathname);
         consumedLength = pagePathSegments.length;
 
         // Вычисляем оставшуюся часть пути для дочерних страниц
@@ -134,5 +134,23 @@ export class PagePathAnalyzer<RouterContextType> implements PagePathAnalyzerInte
       params,
       pathSegments,
     };
+  }
+
+  public extractOriginFromUrl(urlOrPath: string): string {
+    try {
+      const url = new URL(urlOrPath, window.location.origin);
+      // Проверяем, что это внутренняя ссылка (тот же origin)
+      const isInnerUrl = url.origin === window.location.origin;
+
+      if (isInnerUrl) {
+        return url.pathname + url.search + url.hash;
+      }
+
+      // Если внешняя ссылка, возвращаем как есть (будет ошибка позже)
+      return urlOrPath;
+    } catch {
+      // Если не удалось распарсить как URL, значит это уже путь
+      return urlOrPath;
+    }
   }
 }
