@@ -1,6 +1,7 @@
 export type { CreateRoute } from './CreateRoute'
 export type { PageInfo } from './PageInfo'
 export type { PageClass, PageInterface, PageProps } from './PageInterface'
+export { RoutePage } from './PageInterface'
 export type { Route } from './Route'
 export type { RouteLocation } from './RouteLocation'
 export type { RouteParams } from './RouteParams'

@@ -11,3 +11,4 @@ export type {
   RouteQuery,
   RouterContext,
 } from "./types";
+export { RoutePage } from "./types";

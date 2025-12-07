@@ -8,7 +8,20 @@ export interface PageInterface {
   unmount?(): void;
 }
 export type PageProps<RouterContextType> = {
-  router: RouterInterface<RouterContextType>
-} & RouterContext
+  router: RouterInterface<RouterContextType>;
+} & RouterContext;
 
-export type PageClass<RouterContextType> = new (props: PageProps<RouterContextType>) => PageInterface;
+export type PageClass<RouterContextType> = new (
+  props: PageProps<RouterContextType>
+) => PageInterface;
+
+export abstract class RoutePage<RouterContextType> implements PageInterface {
+  protected router: RouterInterface<RouterContextType>;
+
+  constructor(props: PageProps<RouterContextType>) {
+    this.router = props.router;
+  }
+
+  abstract key: string;
+  abstract mount(): HTMLElement | Promise<HTMLElement>;
+}
